@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SlumberSense | Reymar Manaloto</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Animate.css for modal animation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #e0ded9;
+        }
+
+        /* Gradient background for header */
+        header.header-animated {
+            background: linear-gradient(135deg, #4a90e2, #1e3c72);
+            color: white;
+            animation: fadeInHeader 1.5s ease-in-out;
+            border-radius: 8px;
+        }
+
+        /* Logo fade-in animation */
+        header.header-animated .logo {
+            animation: fadeInLogo 1.5s ease-in-out;
+        }
+
+        /* Keyframes for fade-in */
+        @keyframes fadeInHeader {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLogo {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        header img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group-text {
+            width: 60px;
+            text-align: center;
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<header class="d-flex align-items-center justify-content-start p-3 shadow-sm header-animated p-3" style="gap:20px;">
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo" style="height:80px; width:auto;">
+
+    <!-- App Name and Tagline -->
+    <div>
+        <h4 class="h4 mb-1 fw-bold">SlumberSense</h4>
+        <p class="mb-0 fst-italic" style="font-size:0.9rem;">“Intelligent insights to sense and improve your sleep”</p>
+    </div>
+</header>
+
+
+
+<div class="container">
+    <form id="predictForm" action="/predict" method="POST" novalidate>
+
+        <!-- Gender Dropdown -->
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Gender</label>
+            <div class="col-6">
+                <select name="gender" class="form-select" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- BMI Dropdown -->
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">BMI Category</label>
+            <div class="col-6">
+                <select name="bmi_category" class="form-select" required>
+                    <option value="" disabled selected>Select BMI</option>
+                    <option value="0">Normal</option>
+                    <option value="2">Overweight</option>
+                    <option value="3">Obese</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Slider Inputs in Two Columns -->
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Age</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="age" min="1" max="120" value="1" oninput="ageValue.innerText=this.value">
+                <span id="ageValue" class="fw-bold">1</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Sleep Duration (hrs)</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_duration" min="2" max="10" step="0.1" value="2" oninput="sleepValue.innerText=this.value">
+                <span id="sleepValue" class="fw-bold">2</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Quality of Sleep</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_quality" min="1" max="10" value="1" oninput="qualityValue.innerText=this.value">
+                <span id="qualityValue" class="fw-bold">1</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Physical Activity Level</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="physical_activity" min="10" max="100" value="10" oninput="activityValue.innerText=this.value">
+                <span id="activityValue" class="fw-bold">10</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Stress Level</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="stress_level" min="1" max="10" value="1" oninput="stressValue.innerText=this.value">
+                <span id="stressValue" class="fw-bold">1</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Heart Rate</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="heart_rate" min="50" max="100" value="50" oninput="heartValue.innerText=this.value">
+                <span id="heartValue" class="fw-bold">50</span>
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label class="col-6 col-form-label">Daily Steps</label>
+            <div class="col-6 d-flex align-items-center">
+                <input type="range" class="form-range me-3 flex-grow-1" name="daily_steps" min="1000" max="10000" step="1000" value="1000" oninput="stepsValue.innerText=this.value">
+                <span id="stepsValue" class="fw-bold">1000</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons (Equal Width, Taller, Hover Effect) -->
+        <div class="row g-3 mt-3">
+            <div class="col">
+                <button type="submit" class="btn btn-primary action-btn w-100">
+                    <i class="bi bi-activity"></i> Predict
+                </button>
+            </div>
+            <div class="col">
+                <button type="reset" class="btn btn-warning action-btn w-100">
+                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-secondary action-btn w-100" data-bs-toggle="modal" data-bs-target="#developerModal">
+                    <i class="bi bi-user"></i> Developer
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-info action-btn w-100" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                    <i class="bi bi-info-circle"></i> About
+                </button>
+            </div>
+            
+        </div>
+
+
+    </form>
+</div>
+
+<!-- Prediction Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg animate__animated animate__fadeInDown">
+      <div class="modal-header" style="background-color: {{ color }}; color: white;">
+        <h5 class="modal-title">Prediction Result</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        {% if prediction %}
+            <h4>{{ prediction }}</h4>
+            <p class="fw-bold">{{ suggestion }}</p>
+            <div class="progress mt-3" style="height: 25px;">
+              <div class="progress-bar" role="progressbar" style="width: {{ severity }}%; background-color: {{ color }};" aria-valuenow="{{ severity }}" aria-valuemin="0" aria-valuemax="100">
+                {{ severity }}% Risk
+              </div>
+            </div>
+        {% else %}
+            <p>No prediction available.</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg animate__animated animate__fadeInDown">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title"><i class="bi bi-info-circle"></i> About App</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>This Sleep Disorder Prediction System uses machine learning to assess your sleep patterns and risks for common sleep disorders like Sleep Apnea and Insomnia.</p>
+        <p>It provides actionable suggestions based on your inputs and presents the results with a severity bar to help you understand your risk level.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Developer Modal -->
+<div class="modal fade" id="developerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg animate__animated animate__fadeInDown">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title"><i class="bi bi-person-badge"></i> Developer Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Developed by: Reymar Manaloto</p>
+        <p>Email: <a href="mailto:reymar.manaloto@auf.edu.ph">reymar.manaloto@auf.edu.ph</a></p>
+        <p>Affiliation: Angeles University Foundation</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(() => {
+    'use strict';
+    const forms = document.querySelectorAll('form');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    // Show prediction modal if available
+    {% if prediction %}
+        const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+        resultModal.show();
+    {% endif %}
+})();
+</script>
+
+</body>
+</html>
