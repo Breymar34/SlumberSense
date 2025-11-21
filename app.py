@@ -10,6 +10,7 @@ app = Flask(__name__)
 model_bundle = joblib.load("lr_best_model.pkl")
 model = model_bundle["model"]
 metrics = model_bundle["metrics"]
+predictions = model_bundle["predictions"]   
 
 
 @app.route("/")
@@ -79,7 +80,9 @@ def predict():
                            accuracy=accuracy,
                            color=color,
                            suggestion=suggestion,
-                           severity=severity)
+                           severity=severity,
+                           predictions=predictions
+                           )
 if __name__ == "__main__":
    # app.run(debug=True, port=5001)
      app.run(debug=True)

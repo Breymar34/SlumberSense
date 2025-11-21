@@ -20,7 +20,6 @@
             background: #e0ded9;
         }
 
-        /* Gradient background for header */
         header.header-animated {
             background: linear-gradient(135deg, #4a90e2, #1e3c72);
             color: white;
@@ -28,66 +27,71 @@
             border-radius: 8px;
         }
 
-        /* Logo fade-in animation */
-        header.header-animated .logo {
-            animation: fadeInLogo 1.5s ease-in-out;
-        }
-
-        /* Keyframes for fade-in */
-        @keyframes fadeInHeader {
-            0% { opacity: 0; transform: translateY(-10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInLogo {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        header img {
+        header img.logo {
             height: 60px;
-            margin-bottom: 10px;
+            width: auto;
+        }
+
+        /* Mobile header fix */
+        @media (max-width: 576px) {
+            header.header-animated {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header img.logo {
+                height: 70px;
+            }
         }
 
         .container {
             max-width: 650px;
-            margin: 30px auto;
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 12px;
+            margin-top: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .input-group-text {
-            width: 60px;
-            text-align: center;
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-
-        .action-buttons {
-            margin-top: 20px;
+        /* Fields readable on small screens */
+        .col-6 {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 576px) {
+            .row.align-items-center .col-6:first-child {
+                margin-bottom: 5px;
+            }
+        }
+
+        /* 4 buttons responsive */
+        .action-btn {
+            padding: 12px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons .col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
         }
     </style>
+
 </head>
 <body>
 
-<header class="d-flex align-items-center justify-content-start p-3 shadow-sm header-animated p-3" style="gap:20px;">
-    <!-- Logo -->
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo" style="height:80px; width:auto;">
+<header class="d-flex align-items-center justify-content-start p-3 shadow-sm header-animated" style="gap:20px;">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
 
-    <!-- App Name and Tagline -->
     <div>
         <h4 class="h4 mb-1 fw-bold">SlumberSense</h4>
-        <p class="mb-0 fst-italic" style="font-size:0.9rem;">“Intelligent insights to sense and improve your sleep”</p>
+        <p class="mb-0 fst-italic" style="font-size:0.9rem;">
+            “Intelligent insights to sense and improve your sleep”
+        </p>
     </div>
 </header>
-
-
 
 <div class="container">
     <form id="predictForm" action="/predict" method="POST" novalidate>
@@ -121,82 +125,86 @@
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Age</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="age" min="1" max="120" value="1" oninput="ageValue.innerText=this.value">
-                <span id="ageValue" class="fw-bold">1</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="age" min="1" max="120" value="23" oninput="ageValue.innerText=this.value">
+                <span id="ageValue" class="fw-bold">23</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Sleep Duration (hrs)</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_duration" min="2" max="10" step="0.1" value="2" oninput="sleepValue.innerText=this.value">
-                <span id="sleepValue" class="fw-bold">2</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_duration" min="5" max="10" step="0.1" value="7" oninput="sleepValue.innerText=this.value">
+                <span id="sleepValue" class="fw-bold">7</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Quality of Sleep</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_quality" min="1" max="10" value="1" oninput="qualityValue.innerText=this.value">
-                <span id="qualityValue" class="fw-bold">1</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="sleep_quality" min="1" max="10" value="8" oninput="qualityValue.innerText=this.value">
+                <span id="qualityValue" class="fw-bold">8</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Physical Activity Level</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="physical_activity" min="10" max="100" value="10" oninput="activityValue.innerText=this.value">
-                <span id="activityValue" class="fw-bold">10</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="physical_activity" min="10" max="100" value="30" oninput="activityValue.innerText=this.value">
+                <span id="activityValue" class="fw-bold">30</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Stress Level</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="stress_level" min="1" max="10" value="1" oninput="stressValue.innerText=this.value">
-                <span id="stressValue" class="fw-bold">1</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="stress_level" min="1" max="10" value="4" oninput="stressValue.innerText=this.value">
+                <span id="stressValue" class="fw-bold">4</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Heart Rate</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="heart_rate" min="50" max="100" value="50" oninput="heartValue.innerText=this.value">
-                <span id="heartValue" class="fw-bold">50</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="heart_rate" min="50" max="100" value="70" oninput="heartValue.innerText=this.value">
+                <span id="heartValue" class="fw-bold">70</span>
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
             <label class="col-6 col-form-label">Daily Steps</label>
             <div class="col-6 d-flex align-items-center">
-                <input type="range" class="form-range me-3 flex-grow-1" name="daily_steps" min="1000" max="10000" step="1000" value="1000" oninput="stepsValue.innerText=this.value">
-                <span id="stepsValue" class="fw-bold">1000</span>
+                <input type="range" class="form-range me-3 flex-grow-1" name="daily_steps" min="1000" max="10000" step="1000" value="3000" oninput="stepsValue.innerText=this.value">
+                <span id="stepsValue" class="fw-bold">3000</span>
             </div>
         </div>
 
         <!-- Action Buttons (Equal Width, Taller, Hover Effect) -->
-        <div class="row g-3 mt-3">
-            <div class="col">
+        <div class="row action-buttons g-2 mt-3">
+            <div class="col-6 col-md-3">
                 <button type="submit" class="btn btn-primary action-btn w-100">
                     <i class="bi bi-activity"></i> Predict
                 </button>
             </div>
-            <div class="col">
+
+            <div class="col-6 col-md-3">
                 <button type="reset" class="btn btn-warning action-btn w-100">
                     <i class="bi bi-arrow-counterclockwise"></i> Reset
                 </button>
             </div>
-            <div class="col">
-                <button type="button" class="btn btn-secondary action-btn w-100" data-bs-toggle="modal" data-bs-target="#developerModal">
+
+            <div class="col-6 col-md-3">
+                <button type="button" class="btn btn-secondary action-btn w-100" 
+                        data-bs-toggle="modal" data-bs-target="#developerModal">
                     <i class="bi bi-user"></i> Developer
                 </button>
             </div>
-            <div class="col">
-                <button type="button" class="btn btn-info action-btn w-100" data-bs-toggle="modal" data-bs-target="#aboutModal">
+
+            <div class="col-6 col-md-3">
+                <button type="button" class="btn btn-info action-btn w-100" 
+                        data-bs-toggle="modal" data-bs-target="#aboutModal">
                     <i class="bi bi-info-circle"></i> About
                 </button>
             </div>
-            
         </div>
 
 
@@ -213,8 +221,8 @@
       </div>
       <div class="modal-body text-center">
         {% if prediction %}
-            <h4>{{ prediction }}</h4>
-            <p class="fw-bold">{{ suggestion }}</p>
+            <h4>{{ prediction }} with {{accuracy}}% accuracy</h4>
+            <p class="fw-bold text-align-justify">{{ suggestion }}</p>
             <div class="progress mt-3" style="height: 25px;">
               <div class="progress-bar" role="progressbar" style="width: {{ severity }}%; background-color: {{ color }};" aria-valuenow="{{ severity }}" aria-valuemin="0" aria-valuemax="100">
                 {{ severity }}% Risk
@@ -223,6 +231,7 @@
         {% else %}
             <p>No prediction available.</p>
         {% endif %}
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
